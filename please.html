@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBERNETIC DONATION NODE - ACCESS REQUIRED</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap');
+
+        /* Custom configuration for Tailwind colors */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'matrix-green': '#00ff41',
+                        'matrix-dark': '#0a0a0a',
+                    },
+                    fontFamily: {
+                        mono: ['Major Mono Display', 'monospace'],
+                    },
+                }
+            }
+        }
+
+        /* Base Matrix/Code Rain Effect - uses custom CSS for performance */
+        .matrix-bg {
+            background-color: #0a0a0a;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        .code-rain::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 1px,
+                rgba(0, 255, 65, 0.05) 2px,
+                rgba(0, 255, 65, 0.05) 3px
+            );
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+            animation: rain-scroll 60s linear infinite;
+        }
+
+        @keyframes rain-scroll {
+            from { background-position: 0 0; }
+            to { background-position: 0 10000px; }
+        }
+
+        /* Glitch Effect for text */
+        .glitch-text {
+            animation: glitch-anim 2s infinite alternate;
+        }
+
+        @keyframes glitch-anim {
+            0% { text-shadow: 0.05em 0 0 #00ff41, -0.05em -0.025em 0 #ff00ff, 0.025em 0.05em 0 #00ffff; }
+            14% { text-shadow: -0.05em -0.025em 0 #00ff41, 0.05em 0.025em 0 #ff00ff, -0.025em -0.05em 0 #00ffff; }
+            15% { text-shadow: 0.05em 0 0 #00ff41, -0.05em -0.025em 0 #ff00ff, 0.025em 0.05em 0 #00ffff; }
+            16% { text-shadow: -0.05em -0.025em 0 #00ff41, 0.05em 0.025em 0 #ff00ff, -0.025em -0.05em 0 #00ffff; }
+            /* Stay stable for a while */
+            20% { text-shadow: none; }
+            90% { text-shadow: none; }
+            /* Introduce final glitch */
+            92% { text-shadow: 0.05em 0 0 #00ff41, -0.05em -0.025em 0 #ff00ff, 0.025em 0.05em 0 #00ffff; }
+            94% { text-shadow: none; }
+            100% { text-shadow: -0.05em -0.025em 0 #00ff41, 0.05em 0.025em 0 #ff00ff, -0.025em -0.05em 0 #00ffff; }
+        }
+
+        /* Styling the donation button */
+        .donation-button {
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.7);
+            border: 2px solid #00ff41;
+        }
+
+        .donation-button:hover {
+            box-shadow: 0 0 30px #00ff41, 0 0 50px #00ff41;
+            transform: scale(1.05);
+            background-color: rgba(0, 255, 65, 0.1);
+        }
+
+    </style>
+</head>
+<body class="matrix-bg code-rain text-matrix-green font-mono">
+
+    <!-- Main Centered Content Area -->
+    <div class="relative z-10 flex flex-col items-center justify-start lg:justify-center min-h-screen p-4 py-10 sm:py-12 lg:py-0">
+        <!-- System Status Header -->
+        <p id="system-status" class="text-sm tracking-widest mb-6 opacity-75"></p>
+
+        <!-- Main Request Card -->
+        <div class="bg-matrix-dark/80 backdrop-blur-sm p-6 sm:p-8 md:p-10 lg:p-12 rounded-xl w-full max-w-md md:max-w-lg shadow-2xl shadow-matrix-green/30">
+
+            <!-- Glitching Title -->
+            <h1 class="glitch-text text-xl sm:text-2xl md:text-4xl text-center mb-5 tracking-widest font-bold">
+                FUNDING_REQUEST
+            </h1>
+
+            <!-- Request Body -->
+            <p class="text-center text-base sm:text-lg md:text-xl mb-8 leading-relaxed border-b border-matrix-green/30 pb-4">
+                TRANSACTION PROTOCOL 724. 
+                <br><br>
+                A MINIMAL RESOURCE INJECTION IS REQUIRED TO ACQUIRE LUNG CANCER MODULE (TOTAL COST: $20.00 USD).
+            </p>
+
+            <div class="text-center mb-8">
+                <p class="text-3xl sm:text-4xl font-extrabold text-matrix-green mb-3 sm:mb-4">
+                    TARGET: $20.00 USD
+                </p>
+                <p class="text-xs sm:text-sm text-white/50">
+                    ACCESS CODE: ACQUISITION_PROTOCOL
+                </p>
+            </div>
+
+            <!-- Donation Link -->
+            <a href="https://www.paypal.me/latridell"
+               target="_blank"
+               class="donation-button w-full block text-center py-4 rounded-lg text-base sm:text-lg font-bold uppercase tracking-wider bg-transparent text-matrix-green hover:text-white"
+               role="button"
+               id="donate-button">
+                [ INITIATE TRANSFER ]
+            </a>
+            <div class="mt-8 text-center">
+                <p class="text-xs sm:text-sm mb-4 text-white/80">Prefer to scan? Use the QR code below.</p>
+                <img src="qrcode.png" alt="Donation QR code" class="mx-auto w-36 h-36 sm:w-48 sm:h-48 object-contain border border-matrix-green/50 rounded-lg shadow-lg shadow-matrix-green/20">
+            </div>
+
+            <!-- Placeholder Message -->
+            <p class="text-center text-[0.65rem] sm:text-xs mt-6 text-white/70">
+                NOTE: God blesses his most retarded developers.
+                <br>
+                ACKNOWLEDGEMENT: PROOF OF ACQUIRED ITEM CAN BE PROVIDED UPON SUCCESSFUL FUNDING.
+            </p>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const statusElement = document.getElementById('system-status');
+            const buttonElement = document.getElementById('donate-button');
+            const targetText = "SYSTEM_STATUS: ONLINE // CONNECTION: SECURE // AUTH: ADMIN_ACCESS";
+            const typeDelay = 50; // ms per character
+
+            let i = 0;
+            function typeWriter() {
+                if (i < targetText.length) {
+                    statusElement.innerHTML += targetText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, typeDelay);
+                } else {
+                    // Set up blinking cursor after typing is done
+                    statusElement.classList.add('blinking-cursor');
+                }
+            }
+
+            // Simple function to make the button pulse slightly when focused/active
+            buttonElement.addEventListener('mouseover', () => {
+                buttonElement.style.textShadow = '0 0 5px #00ff41, 0 0 10px #00ff41';
+            });
+            buttonElement.addEventListener('mouseout', () => {
+                buttonElement.style.textShadow = 'none';
+            });
+
+            // Start the typing effect
+            typeWriter();
+        });
+    </script>
+</body>
+</html>
