@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DISTRICT - The Broadcast // Live</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --color-coal: #050505;
+            --color-char: #0f0d11;
+            --color-venom: #b8192b;
+            --color-ember: #d3742c;
+            --color-rust-dark: #3d1d17;
+            --color-rust: #743625;
+            --color-rust-light: #a45832;
+            --color-metal: #191716;
+            --color-smoke: #f0e5d4;
+            --color-muted: #9e9486;
+            --color-ash: #6b5f58;
+            --shadow-ember: 0 0 35px rgba(184, 25, 43, 0.35);
+            --shadow-rust: 0 0 25px rgba(211, 116, 44, 0.25);
+            --glitch-duration: 0.12s;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Space Grotesk', sans-serif;
+            background-color: var(--color-coal);
+            color: var(--color-smoke);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            overflow-x: hidden;
+            position: relative;
+            background-image:
+                radial-gradient(circle at 20% 15%, rgba(184, 25, 43, 0.3) 0%, transparent 45%),
+                radial-gradient(circle at 80% 0%, rgba(211, 116, 44, 0.22) 0%, transparent 55%),
+                linear-gradient(120deg, var(--color-char) 0%, var(--color-coal) 65%),
+                url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzJ67AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAEzgAABM4BFmS4JAAAABZ0RVh0Q3JlYXRpb24gVGltZQAwMy8wMy8xOF/i4Y0AAAAaSURBVAiJddExAQAwCATAyX/9X9u6lTqIBlVqC0sAAAAASUVORK5CYII=");
+            background-size: 100% 100%, 100% 100%, 100% 100%, 220px 220px;
+        }
+
+        /* Static grime overlay for the warehouse vibe */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 2px),
+                repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.2) 0px, transparent 3px);
+            mix-blend-mode: screen;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 75% 0%, rgba(184, 25, 43, 0.28) 0%, transparent 50%);
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        ::selection {
+            background: var(--color-venom);
+            color: var(--color-coal);
+        }
+
+        .neon-box {
+            background: linear-gradient(145deg, rgba(22, 16, 17, 0.95), rgba(7, 5, 6, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            box-shadow:
+                inset 0 0 60px rgba(0, 0, 0, 0.65),
+                0 20px 55px rgba(0, 0, 0, 0.85),
+                0 0 45px rgba(184, 25, 43, 0.25);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            animation: ember-pulse 10s ease-in-out infinite alternate;
+        }
+
+        .neon-box::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(115deg, rgba(184, 25, 43, 0.12), transparent 50%),
+                repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 1px, transparent 1px, transparent 3px);
+            mix-blend-mode: overlay;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .neon-box::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.65));
+            pointer-events: none;
+        }
+
+        header p {
+            letter-spacing: 0.25em;
+        }
+
+        .glitch-text {
+            position: relative;
+            text-shadow: 0 0 8px var(--color-venom), 0 0 24px rgba(184, 25, 43, 0.6);
+        }
+
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .glitch-text::before {
+            color: var(--color-ember);
+            animation: glitch-before var(--glitch-duration) infinite alternate-reverse step-end;
+        }
+
+        .glitch-text::after {
+            color: rgba(255, 255, 255, 0.8);
+            animation: glitch-after var(--glitch-duration) infinite alternate-reverse step-end;
+        }
+
+        .industrial-panel {
+            background: linear-gradient(165deg, rgba(21, 16, 17, 0.95), rgba(9, 7, 8, 0.85));
+            border: 1px solid rgba(138, 79, 47, 0.45);
+            box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .industrial-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.04), transparent 40%);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .rust-panel {
+            background: linear-gradient(140deg, rgba(38, 26, 24, 0.95), rgba(16, 12, 11, 0.9));
+        }
+
+        .status-strip {
+            border-bottom: 1px solid rgba(184, 25, 43, 0.35);
+        }
+
+        .status-lamp {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 999px;
+            background: var(--color-ash);
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .status-lamp.offline {
+            background: #411317;
+            box-shadow: 0 0 12px rgba(110, 30, 32, 0.7);
+        }
+
+        .status-lamp.online {
+            background: #6da940;
+            box-shadow: 0 0 18px rgba(109, 169, 64, 0.7);
+        }
+
+        .status-lamp.speaking {
+            background: var(--color-ember);
+            box-shadow: 0 0 18px rgba(211, 116, 44, 0.8);
+        }
+
+        .status-lamp.error {
+            background: #b40c1d;
+            box-shadow: 0 0 18px rgba(180, 12, 29, 0.8);
+        }
+
+        .status-label {
+            font-family: 'Space Mono', 'Inter', monospace;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            color: var(--color-muted);
+            transition: color 0.3s ease;
+        }
+
+        .status-label.offline {
+            color: #d66a5f;
+        }
+
+        .status-label.online {
+            color: #9edb7c;
+        }
+
+        .status-label.speaking {
+            color: var(--color-ember);
+        }
+
+        .status-label.error {
+            color: #ff7a7a;
+        }
+
+        .text-venom {
+            color: var(--color-venom);
+        }
+
+        .text-ember {
+            color: var(--color-ember);
+        }
+
+        .text-muted {
+            color: var(--color-muted);
+        }
+
+        .text-smoke {
+            color: var(--color-smoke);
+        }
+
+        .rust-subtitle {
+            color: var(--color-muted);
+            text-transform: uppercase;
+        }
+
+        .lettered-label {
+            letter-spacing: 0.55em;
+        }
+
+        .rust-divider {
+            border-top: 1px solid rgba(138, 79, 47, 0.45);
+        }
+
+        .data-line {
+            letter-spacing: 0.2em;
+        }
+
+        .data-line span:first-child {
+            color: var(--color-ash);
+        }
+
+        .data-line span:last-child {
+            color: var(--color-smoke);
+        }
+
+        .neon-button {
+            border: 1px solid rgba(116, 69, 46, 0.6);
+            background: rgba(17, 14, 14, 0.85);
+            color: var(--color-smoke);
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            text-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+            box-shadow:
+                inset 0 0 15px rgba(0, 0, 0, 0.6),
+                0 0 18px rgba(0, 0, 0, 0.4);
+            transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .neon-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .neon-button.idle-state {
+            color: var(--color-ember);
+            border-color: rgba(211, 116, 44, 0.65);
+        }
+
+        .neon-button.idle-state:hover {
+            background: linear-gradient(90deg, rgba(211, 116, 44, 0.25), rgba(91, 23, 23, 0.6));
+            box-shadow: var(--shadow-rust);
+        }
+
+        .neon-button.live-state {
+            color: var(--color-venom);
+            border-color: rgba(184, 25, 43, 0.7);
+            box-shadow: 0 0 25px rgba(184, 25, 43, 0.35);
+        }
+
+        .neon-button.live-state:hover {
+            background: linear-gradient(90deg, rgba(184, 25, 43, 0.3), rgba(45, 16, 16, 0.8));
+            color: var(--color-smoke);
+        }
+
+        .neon-button.secondary {
+            border-color: rgba(64, 64, 64, 0.7);
+            color: var(--color-muted);
+        }
+
+        .neon-button.secondary:hover {
+            background: linear-gradient(120deg, rgba(70, 53, 45, 0.85), rgba(25, 20, 20, 0.9));
+            color: var(--color-smoke);
+        }
+
+        .terminal-panel {
+            border-top: 1px solid rgba(86, 47, 31, 0.65);
+        }
+
+        .terminal-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--color-ember);
+            letter-spacing: 0.4em;
+        }
+
+        .terminal-screen {
+            background: rgba(2, 2, 2, 0.75);
+            border: 1px solid rgba(87, 129, 79, 0.35);
+            border-radius: 0.5rem;
+            color: #bedab3;
+            text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+        }
+
+        .terminal-screen::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .terminal-screen::-webkit-scrollbar-thumb {
+            background: rgba(211, 116, 44, 0.7);
+            border-radius: 999px;
+        }
+
+        .player-panel {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 1rem;
+        }
+
+        .player-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            min-height: clamp(220px, 40vw, 520px);
+            max-height: min(75vh, 640px);
+            border: 1px solid rgba(116, 69, 46, 0.65);
+            border-radius: 0.75rem;
+            background: linear-gradient(180deg, rgba(6, 4, 4, 0.95), rgba(6, 4, 4, 0.75));
+            box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+        }
+
+        .player-frame iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .player-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(6, 4, 4, 0.85);
+        }
+
+        .log-ok {
+            color: #cfe6bd;
+        }
+
+        .log-warn {
+            color: #e8b973;
+        }
+
+        .log-error {
+            color: #ff7f7f;
+        }
+
+        .log-accent {
+            color: #f2a660;
+        }
+
+        @keyframes ember-pulse {
+            0% {
+                box-shadow:
+                    inset 0 0 60px rgba(0, 0, 0, 0.6),
+                    0 0 15px rgba(184, 25, 43, 0.2);
+            }
+            100% {
+                box-shadow:
+                    inset 0 0 60px rgba(0, 0, 0, 0.6),
+                    0 0 50px rgba(184, 25, 43, 0.4);
+            }
+        }
+
+        @keyframes glitch-before {
+            0% {
+                transform: translate(2px, 0);
+                clip-path: inset(15% 0 80% 0);
+            }
+            40% {
+                transform: translate(-4px, 1px);
+                clip-path: inset(40% 0 45% 0);
+            }
+            80% {
+                transform: translate(3px, -2px);
+                clip-path: inset(75% 0 10% 0);
+            }
+            100% {
+                transform: translate(0, 0);
+                clip-path: inset(85% 0 0 0);
+            }
+        }
+
+        @keyframes glitch-after {
+            0% {
+                transform: translate(-3px, -1px);
+                clip-path: inset(20% 0 70% 0);
+            }
+            40% {
+                transform: translate(4px, 2px);
+                clip-path: inset(55% 0 30% 0);
+            }
+            80% {
+                transform: translate(-1px, 3px);
+                clip-path: inset(80% 0 5% 0);
+            }
+            100% {
+                transform: translate(1px, 0);
+                clip-path: inset(0 0 85% 0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div id="main-interface" class="w-full max-w-4xl p-4 md:p-8 rounded-xl neon-box transform transition-all duration-300">
+
+        <!-- Header and Glitch Title -->
+        <header class="text-center mb-10">
+            <h1 id="district-title"
+                data-text="DISTRICT"
+                class="glitch-text text-6xl md:text-8xl font-black uppercase tracking-widest text-white mb-2"
+                style="color: var(--color-venom);"
+            >
+                DISTRICT
+            </h1>
+            <p class="text-xl md:text-2xl font-mono rust-subtitle">
+                // Underground Broadcast System V.3.0
+            </p>
+        </header>
+
+        <!-- Radio Core / Status Display -->
+        <section class="mb-10 p-6 rounded-lg industrial-panel rust-panel">
+            <div class="flex items-center justify-between status-strip pb-3 mb-4">
+                <h2 class="text-3xl text-ember font-bold uppercase tracking-wider">
+                    <span class="font-mono text-base text-muted block -mb-1">
+                        _STATUS_
+                    </span>
+                    BROADCAST INITIATED
+                </h2>
+                <div class="flex items-center space-x-2">
+                    <div id="status-light" class="status-lamp offline"></div>
+                    <span id="status-text" class="status-label offline">OFFLINE</span>
+                </div>
+            </div>
+
+            <!-- Now Playing/Info Block -->
+            <div class="space-y-3">
+                <div class="font-mono text-base text-muted flex justify-between data-line">
+                    <span>> CURRENT FREQUENCY:</span>
+                    <span id="frequency">98.7_MHZ</span>
+                </div>
+                <div class="font-mono text-base text-muted flex justify-between data-line">
+                    <span>> DATA STREAM:</span>
+                    <span id="data-stream">CRYPTED_AUDIO_FEED_01</span>
+                </div>
+                <div class="font-mono text-2xl text-venom mt-4 pt-4 rust-divider">
+                    <span class="text-lg font-bold text-ember block -mb-1 lettered-label">
+                        NOW P L A Y I N G
+                    </span>
+                    <span id="now-playing" class="glitch-text" data-text="[STANDBY: AWAITING INPUT]">
+                        [STANDBY: AWAITING INPUT]
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Control Panel / CTA -->
+        <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+            <button id="connect-button"
+                    class="neon-button idle-state flex-1 px-8 py-4 rounded-lg text-xl font-bold uppercase tracking-widest transition-colors"
+                    onclick="toggleBroadcast()"
+            >
+                Connect to Broadcast // Listen
+            </button>
+
+            <button class="neon-button secondary px-8 py-4 rounded-lg text-xl font-bold uppercase tracking-wide transition-colors"
+                    onclick="logMessage('Attempting to download latest DATA_PACKET...');"
+            >
+                ACCESS ARCHIVES
+            </button>
+        </div>
+
+        <!-- Player Panel Mount Point -->
+        <div id="player-root" class="mt-8"></div>
+
+        <!-- Terminal Output -->
+        <footer class="mt-8 pt-4 industrial-panel terminal-panel">
+            <h3 class="terminal-title mb-2">
+                >>> TERMINAL LOG
+            </h3>
+            <div id="terminal-log" class="terminal-screen h-24 overflow-y-scroll p-2 font-mono text-xs">
+                _INIT: Structural integrity scan complete. \\
+                _LOG: Welcome to the DISTRICT warehouse node. Authenticating user session... \\
+                _READY: Awaiting user input.
+            </div>
+        </footer>
+
+    </div>
+    <script>
+        window.DISTRICT_API_BASE = "https://districtionraddoor.latridell-services.workers.dev";
+        window.DISTRICT_QUEUE_ENDPOINT = "https://districtionraddoor.latridell-services.workers.dev/api/queue";
+    </script>
+
+    <script>
+        const DISTRICT = {
+            isConnected: false,
+            currentTrack: null,
+            log: (message, color = 'log-ok') => {
+                const log = document.getElementById('terminal-log');
+                const timestamp = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                log.innerHTML += `<div class="${color}">[${timestamp}] ${message}</div>`;
+                log.scrollTop = log.scrollHeight; // Auto-scroll to bottom
+            },
+            glitchElements: [],
+            glitchInterval: null
+        };
+
+        const DISTRICT_API_BASE = window.DISTRICT_API_BASE || '';
+        const QUEUE_API_ENDPOINT =
+            window.DISTRICT_QUEUE_ENDPOINT ||
+            window.DISTRICT_TRACK_ENDPOINT ||
+            (DISTRICT_API_BASE ? `${DISTRICT_API_BASE}/api/queue` : '');
+        const PLAYER_POLL_INTERVAL = 5000; // 5s sync cadence
+        const FALLBACK_TRACK = {
+            title: 'Demo Transmission: Rusted Frequencies',
+            url: 'https://www.youtube.com/watch?v=ULN-qpDSAwU&list=PLoTDM1jSGn5IH77oAw7IaJbgUQJaJxXgH',
+            submittedBy: 'Local Demo',
+            requestedBy: 'Local Demo',
+            notes: 'Replace this fallback by wiring DISTRICT_API_BASE (or DISTRICT_QUEUE_ENDPOINT) to your backend queue.'
+        };
+        function updateNowPlayingDisplay(track) {
+            const nowPlaying = document.getElementById('now-playing');
+            if (!nowPlaying) {
+                return;
+            }
+            if (!track) {
+                nowPlaying.textContent = '[STANDBY: Awaiting track data]';
+                return;
+            }
+            const requestedBy = (track.requestedBy || track.submittedBy || 'anon').toString();
+            nowPlaying.innerHTML = '';
+            const titleSpan = document.createElement('span');
+            titleSpan.className = 'text-venom font-bold';
+            titleSpan.textContent = track.title || 'Untitled Signal';
+            nowPlaying.appendChild(titleSpan);
+            nowPlaying.appendChild(document.createTextNode(` // REQUESTED BY ${requestedBy.toUpperCase()}`));
+        }
+
+        document.addEventListener('district:track-update', (event) => {
+            const track = event.detail?.track || null;
+            DISTRICT.currentTrack = track;
+            if (DISTRICT.isConnected) {
+                updateNowPlayingDisplay(track);
+            }
+        });
+
+        function setStatusDisplay(state, labelText) {
+            const statusLight = document.getElementById('status-light');
+            const statusText = document.getElementById('status-text');
+            statusLight.className = `status-lamp ${state}`;
+            statusText.className = `status-label ${state}`;
+            if (labelText) {
+                statusText.textContent = labelText;
+            }
+        }
+
+        function setConnectButtonState(button, state) {
+            button.classList.remove('idle-state', 'live-state');
+            button.classList.add(state === 'live' ? 'live-state' : 'idle-state');
+        }
+
+        // --- Core Glitch & Visual Effects ---
+
+        function applyGlitch(element) {
+            // Randomly applies a glitch class for a brief moment
+            const classes = ['glitch-text-shift-x', 'glitch-text-shift-y', 'glitch-text-clip'];
+            const randomClass = classes[Math.floor(Math.random() * classes.length)];
+
+            element.classList.add(randomClass);
+            setTimeout(() => {
+                element.classList.remove(randomClass);
+            }, 50); // Glitch flash duration
+        }
+
+        function initGlitchLoop() {
+            // Find all elements that should glitch
+            DISTRICT.glitchElements = Array.from(document.querySelectorAll('.glitch-text'));
+
+            DISTRICT.glitchInterval = setInterval(() => {
+                if (DISTRICT.glitchElements.length > 0) {
+                    // Glitch the title more often, status less often
+                    if (Math.random() < 0.7) {
+                         applyGlitch(document.getElementById('district-title'));
+                    }
+                    if (Math.random() < 0.3) {
+                        DISTRICT.glitchElements.forEach(applyGlitch);
+                    }
+                }
+            }, 300); // Glitch effect runs every 300ms
+        }
+
+        // --- Broadcast/Radio Logic ---
+
+        function logMessage(message) {
+            DISTRICT.log(message, 'log-ok');
+        }
+
+        function initPlayerApp() {
+            const container = document.getElementById('player-root');
+            if (!container) return;
+
+            container.innerHTML = `
+                <section class="industrial-panel rust-panel player-panel">
+                    <div class="flex items-center justify-between status-strip pb-3 mb-4">
+                        <div class="text-ember text-2xl font-bold uppercase tracking-widest">Remote Queue Link</div>
+                        <div class="flex items-center space-x-3">
+                            <span id="player-status-label" class="font-mono text-xs tracking-[0.35em] text-muted uppercase">OFFLINE</span>
+                            <button id="player-sync-button" class="neon-button secondary px-4 py-2 text-xs font-bold uppercase tracking-widest">SYNC QUEUE</button>
+                        </div>
+                    </div>
+                    <div class="font-mono text-sm text-muted space-y-2">
+                        <div class="flex justify-between data-line">
+                            <span>&gt; TRACK TITLE</span>
+                            <span id="player-meta-title" class="text-smoke text-right">---</span>
+                        </div>
+                        <div class="flex justify-between data-line">
+                            <span>&gt; REQUESTED BY</span>
+                            <span id="player-meta-requested" class="text-smoke text-right">---</span>
+                        </div>
+                        <div id="player-meta-type-row" class="flex justify-between data-line hidden">
+                            <span>&gt; TYPE</span>
+                            <span id="player-meta-type" class="text-smoke text-right">---</span>
+                        </div>
+                        <div class="flex justify-between data-line">
+                            <span>&gt; LAST UPDATE</span>
+                            <span id="player-meta-updated" class="text-smoke text-right">---</span>
+                        </div>
+                        <div id="player-meta-notes" class="text-xs text-muted leading-relaxed hidden"></div>
+                    </div>
+                    <div class="player-frame mt-4">
+                        <iframe
+                            id="player-iframe"
+                            class="hidden"
+                            title="DISTRICT Broadcast Player"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="origin"
+                        ></iframe>
+                        <div id="player-placeholder" class="player-placeholder text-xs font-mono text-muted">
+                            Awaiting payload from Worker queue...
+                        </div>
+                    </div>
+                    <a
+                        id="player-open-external"
+                        class="neon-button secondary mt-3 inline-flex items-center justify-center px-4 py-2 text-xs font-bold uppercase tracking-widest hidden"
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Open Track on YouTube
+                    </a>
+                    <div class="mt-6 pt-4 rust-divider">
+                        <div class="font-mono text-xs tracking-[0.35em] text-muted uppercase mb-2">UPCOMING SEQUENCE</div>
+                        <ul id="player-upcoming-list" class="space-y-1 text-xs font-mono text-muted"></ul>
+                        <div id="player-upcoming-empty" class="text-xs font-mono text-muted">Queue idle. Waiting for Worker to accept a new track.</div>
+                    </div>
+                    <div id="player-error" class="mt-3 text-xs font-mono text-red-400 hidden"></div>
+                    <div id="player-endpoint-hint" class="mt-3 text-xs font-mono text-muted hidden">
+                        Set window.DISTRICT_API_BASE (or DISTRICT_QUEUE_ENDPOINT) before load to wire this UI to the Worker queue, and if you open this file via file:// provide window.DISTRICT_EMBED_ORIGIN or run a local server so the YouTube embed can identify your origin. The backend Worker is now the single source of truth for the broadcast state.
+                    </div>
+                </section>
+            `;
+
+            const refs = {
+                statusLabel: container.querySelector('#player-status-label'),
+                syncButton: container.querySelector('#player-sync-button'),
+                metaTitle: container.querySelector('#player-meta-title'),
+                metaRequested: container.querySelector('#player-meta-requested'),
+                metaTypeRow: container.querySelector('#player-meta-type-row'),
+                metaType: container.querySelector('#player-meta-type'),
+                metaUpdated: container.querySelector('#player-meta-updated'),
+                metaNotes: container.querySelector('#player-meta-notes'),
+                playerIframe: container.querySelector('#player-iframe'),
+                playerPlaceholder: container.querySelector('#player-placeholder'),
+                openExternal: container.querySelector('#player-open-external'),
+                upcomingList: container.querySelector('#player-upcoming-list'),
+                upcomingEmpty: container.querySelector('#player-upcoming-empty'),
+                errorBanner: container.querySelector('#player-error'),
+                endpointHint: container.querySelector('#player-endpoint-hint')
+            };
+
+            const playerState = {
+                currentTrack: null,
+                upcoming: [],
+                loading: false,
+                error: null,
+                broadcastActive: Boolean(window.DISTRICT?.isConnected),
+                lastUpdated: null,
+                hasTrack: false
+            };
+
+            const pushLog = (message, tone = 'log-accent') => {
+                if (window.DISTRICT && typeof window.DISTRICT.log === 'function') {
+                    window.DISTRICT.log(message, tone);
+                }
+            };
+
+            const normalizeTrack = (payload) => {
+                if (!payload) return null;
+                const url = payload.url || payload.link || payload.streamUrl;
+                if (!url) return null;
+                const requestedBy = payload.requestedBy || payload.submittedBy || payload.operator || payload.dj || 'Remote Node';
+                const normalized = {
+                    id: payload.id || null,
+                    title: payload.title || payload.name || 'Untitled Signal',
+                    url,
+                    submittedBy: requestedBy,
+                    requestedBy,
+                    type: payload.type || payload.category || null,
+                    notes: payload.notes || payload.message || '',
+                    addedAt: payload.addedAt || payload.submittedAt || null
+                };
+                if (!normalized.notes && normalized.type) {
+                    normalized.notes = `TYPE: ${normalized.type}`;
+                }
+                return normalized;
+            };
+
+            const setSyncButtonLoading = (isLoading) => {
+                refs.syncButton.textContent = isLoading ? 'SYNC...' : 'SYNC QUEUE';
+                refs.syncButton.disabled = isLoading;
+                refs.syncButton.classList.toggle('opacity-60', isLoading);
+            };
+
+            const computeStatusText = () => {
+                if (!QUEUE_API_ENDPOINT) return 'OFFLINE';
+                if (playerState.loading) return 'SYNCING';
+                if (playerState.error) return 'DEGRADED';
+                return 'LOCKED';
+            };
+
+            const updateStatusLabel = () => {
+                if (refs.statusLabel) {
+                    refs.statusLabel.textContent = computeStatusText();
+                }
+            };
+
+            const updateExternalLink = () => {
+                if (!refs.openExternal) return;
+                const track = playerState.currentTrack;
+                if (track?.url) {
+                    refs.openExternal.classList.remove('hidden');
+                    refs.openExternal.href = track.url;
+                    refs.openExternal.setAttribute('aria-label', `Open ${track.title || 'current track'} on YouTube`);
+                } else {
+                    refs.openExternal.classList.add('hidden');
+                    refs.openExternal.removeAttribute('href');
+                    refs.openExternal.removeAttribute('aria-label');
+                }
+            };
+
+            const resolveDisplayTimestamp = () => playerState.lastUpdated;
+
+            const updateMetaDisplay = () => {
+                const track = playerState.currentTrack;
+                if (refs.metaTitle) {
+                    refs.metaTitle.textContent = track ? track.title || 'Untitled Signal' : '---';
+                }
+                if (refs.metaRequested) {
+                    refs.metaRequested.textContent = track ? (track.requestedBy || track.submittedBy || '---') : '---';
+                }
+                if (refs.metaTypeRow && refs.metaType) {
+                    if (track && track.type) {
+                        refs.metaTypeRow.classList.remove('hidden');
+                        refs.metaType.textContent = track.type.toUpperCase();
+                    } else {
+                        refs.metaTypeRow.classList.add('hidden');
+                    }
+                }
+                if (refs.metaUpdated) {
+                    const timestamp = resolveDisplayTimestamp();
+                    refs.metaUpdated.textContent = timestamp ? timestamp.toLocaleTimeString() : '---';
+                }
+                if (refs.metaNotes) {
+                    if (track && track.notes) {
+                        refs.metaNotes.classList.remove('hidden');
+                        refs.metaNotes.textContent = track.notes;
+                    } else {
+                        refs.metaNotes.classList.add('hidden');
+                        refs.metaNotes.textContent = '';
+                    }
+                }
+            };
+
+            const renderUpcoming = () => {
+                if (!refs.upcomingList || !refs.upcomingEmpty) return;
+                refs.upcomingList.innerHTML = '';
+                if (!playerState.upcoming.length) {
+                    refs.upcomingEmpty.classList.remove('hidden');
+                    return;
+                }
+                refs.upcomingEmpty.classList.add('hidden');
+                playerState.upcoming.forEach((track, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between data-line';
+                    const titleSpan = document.createElement('span');
+                    titleSpan.textContent = `${String(index + 1).padStart(2, '0')}. ${track.title}`;
+                    const submitSpan = document.createElement('span');
+                    submitSpan.className = 'text-smoke text-right';
+                    submitSpan.textContent = track.submittedBy || 'anon';
+                    li.appendChild(titleSpan);
+                    li.appendChild(submitSpan);
+                    refs.upcomingList.appendChild(li);
+                });
+            };
+
+            const updateErrorBanner = () => {
+                if (!refs.errorBanner) return;
+                if (playerState.error) {
+                    refs.errorBanner.classList.remove('hidden');
+                    refs.errorBanner.textContent = `QUEUE ERROR: ${playerState.error}`;
+                } else {
+                    refs.errorBanner.classList.add('hidden');
+                    refs.errorBanner.textContent = '';
+                }
+            };
+
+            const updateEndpointHint = () => {
+                if (!refs.endpointHint) return;
+                if (!QUEUE_API_ENDPOINT) {
+                    refs.endpointHint.classList.remove('hidden');
+                } else {
+                    refs.endpointHint.classList.add('hidden');
+                }
+            };
+
+            const dispatchTrackEvent = () => {
+                document.dispatchEvent(new CustomEvent('district:track-update', { detail: { track: playerState.currentTrack } }));
+            };
+
+            const resolveEmbedOrigin = () => {
+                if (typeof window === 'undefined') return null;
+                if (window.DISTRICT_EMBED_ORIGIN) {
+                    return window.DISTRICT_EMBED_ORIGIN;
+                }
+                if (window.location?.protocol && window.location.protocol !== 'file:') {
+                    return window.location.origin;
+                }
+                return null;
+            };
+
+            const finalizeYouTubeEmbedUrl = (inputUrl) => {
+                try {
+                    const url = inputUrl instanceof URL ? inputUrl : new URL(inputUrl);
+                    if (!url.searchParams.has('rel')) {
+                        url.searchParams.set('rel', '0');
+                    }
+                    if (!url.searchParams.has('modestbranding')) {
+                        url.searchParams.set('modestbranding', '1');
+                    }
+                    const embedOrigin = resolveEmbedOrigin();
+                    if (embedOrigin) {
+                        url.searchParams.set('origin', embedOrigin);
+                    }
+                    return url.toString();
+                } catch (_err) {
+                    return typeof inputUrl === 'string' ? inputUrl : inputUrl.toString();
+                }
+            };
+
+            const buildEmbedUrl = (track) => {
+                if (!track || !track.url) return null;
+                try {
+                    const source = new URL(track.url);
+                    const host = source.hostname.replace('www.', '');
+                    const listId = source.searchParams.get('list');
+                    const isYouTube = host.includes('youtube.com') || host.includes('youtu.be');
+                    if (!isYouTube) {
+                        return track.url;
+                    }
+                    if ((track.type === 'playlist' || source.pathname.includes('/playlist') || listId) && listId) {
+                        const embedUrl = new URL('https://www.youtube.com/embed/videoseries');
+                        embedUrl.searchParams.set('list', listId);
+                        return finalizeYouTubeEmbedUrl(embedUrl);
+                    }
+                    let videoId = source.searchParams.get('v');
+                    if (!videoId && host === 'youtu.be') {
+                        videoId = source.pathname.replace('/', '');
+                    }
+                    if (!videoId) {
+                        const segments = source.pathname.split('/').filter(Boolean);
+                        videoId = segments[segments.length - 1];
+                    }
+                    if (!videoId) return null;
+                    const embedUrl = new URL(`https://www.youtube.com/embed/${videoId}`);
+                    return finalizeYouTubeEmbedUrl(embedUrl);
+                } catch (_err) {
+                    return track.url;
+                }
+            };
+
+            const updatePlayerFrame = () => {
+                if (!refs.playerIframe || !refs.playerPlaceholder) return;
+                const track = playerState.currentTrack;
+                if (!playerState.broadcastActive) {
+                    refs.playerIframe.classList.add('hidden');
+                    refs.playerPlaceholder.classList.remove('hidden');
+                    refs.playerPlaceholder.textContent = 'Broadcast paused. Connect to begin playback.';
+                    refs.playerIframe.dataset.currentSrc = '';
+                    refs.playerIframe.src = '';
+                    return;
+                }
+                if (!track) {
+                    refs.playerIframe.classList.add('hidden');
+                    refs.playerPlaceholder.classList.remove('hidden');
+                    refs.playerPlaceholder.textContent = 'Awaiting payload from Worker queue...';
+                    refs.playerIframe.dataset.currentSrc = '';
+                    refs.playerIframe.src = '';
+                    return;
+                }
+                const embedUrl = buildEmbedUrl(track);
+                if (!embedUrl) {
+                    refs.playerIframe.classList.add('hidden');
+                    refs.playerPlaceholder.classList.remove('hidden');
+                    refs.playerPlaceholder.textContent = 'Unable to render this track URL. Provide a valid YouTube link.';
+                    refs.playerIframe.dataset.currentSrc = '';
+                    refs.playerIframe.src = '';
+                    return;
+                }
+                refs.playerPlaceholder.classList.add('hidden');
+                refs.playerIframe.classList.remove('hidden');
+                if (refs.playerIframe.dataset.currentSrc !== embedUrl) {
+                    refs.playerIframe.src = embedUrl;
+                    refs.playerIframe.dataset.currentSrc = embedUrl;
+                    const descriptor = track.title || 'Remote Track';
+                    pushLog(`PLAYER ARMED: ${descriptor}. Press play inside the iframe to start audio.`, 'log-accent');
+                }
+            };
+
+            const applyStateUpdates = () => {
+                playerState.hasTrack = Boolean(playerState.currentTrack);
+                updateStatusLabel();
+                updateExternalLink();
+                updateMetaDisplay();
+                renderUpcoming();
+                updateErrorBanner();
+                updatePlayerFrame();
+                dispatchTrackEvent();
+            };
+
+            const adoptFallback = () => {
+                playerState.currentTrack = { ...FALLBACK_TRACK };
+                playerState.upcoming = [];
+                playerState.lastUpdated = new Date();
+                applyStateUpdates();
+            };
+
+            const syncQueue = async (silent = false) => {
+                if (!QUEUE_API_ENDPOINT) {
+                    if (!silent) {
+                        pushLog('QUEUE: Backend API not configured. Using fallback transmission.', 'log-warn');
+                    }
+                    playerState.error = 'Waiting for backend configuration.';
+                    playerState.loading = false;
+                    setSyncButtonLoading(false);
+                    adoptFallback();
+                    return;
+                }
+
+                playerState.loading = true;
+                playerState.error = null;
+                updateStatusLabel();
+                updateErrorBanner();
+                setSyncButtonLoading(true);
+
+                try {
+                    const response = await fetch(QUEUE_API_ENDPOINT, { cache: 'no-store' });
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+
+                    const payload = await response.json();
+                    const normalizedNow = normalizeTrack(payload?.now ?? payload);
+                    const normalizedUpcoming = Array.isArray(payload?.upcoming)
+                        ? payload.upcoming.map(normalizeTrack).filter(Boolean)
+                        : [];
+
+                    playerState.currentTrack = normalizedNow;
+                    playerState.upcoming = normalizedUpcoming;
+                    playerState.lastUpdated = new Date();
+                    if (!silent) {
+                        const descriptor = normalizedNow ? normalizedNow.title : 'No active track';
+                        pushLog(`QUEUE UPDATED: ${descriptor}`, normalizedNow ? 'log-ok' : 'log-warn');
+                        if (!normalizedNow && !normalizedUpcoming.length) {
+                            pushLog('QUEUE EMPTY: Waiting for Worker to receive new tracks.', 'log-warn');
+                        }
+                    }
+                } catch (err) {
+                    playerState.error = err.message;
+                    pushLog(`QUEUE ERROR: ${err.message}`, 'log-error');
+                    if (!playerState.hasTrack) {
+                        adoptFallback();
+                    }
+                } finally {
+                    playerState.loading = false;
+                    setSyncButtonLoading(false);
+                    applyStateUpdates();
+                }
+            };
+
+            refs.syncButton.addEventListener('click', () => syncQueue());
+
+            syncQueue();
+            setInterval(() => syncQueue(true), PLAYER_POLL_INTERVAL);
+
+            document.addEventListener('district:queue-sync', () => syncQueue());
+            document.addEventListener('district:broadcast', (event) => {
+                const connected = Boolean(event.detail?.connected);
+                playerState.broadcastActive = connected;
+                if (!connected && refs.playerIframe) {
+                    refs.playerIframe.dataset.currentSrc = '';
+                    refs.playerIframe.src = '';
+                }
+                updatePlayerFrame();
+            });
+
+            updateEndpointHint();
+            applyStateUpdates();
+        }
+        function toggleBroadcast() {
+            const button = document.getElementById('connect-button');
+            const nowPlaying = document.getElementById('now-playing');
+
+            if (!DISTRICT.isConnected) {
+                // Connect Logic
+                DISTRICT.isConnected = true;
+                button.textContent = 'DISCONNECT // Pause Broadcast';
+                setConnectButtonState(button, 'live');
+
+                setStatusDisplay('online', 'ONLINE');
+                if (DISTRICT.currentTrack) {
+                    updateNowPlayingDisplay(DISTRICT.currentTrack);
+                } else {
+                    nowPlaying.textContent = 'LINKED: Waiting for queue data...';
+                }
+
+                // Simulate broadcast start log
+                DISTRICT.log('NETWORK: Connection established (244ms). Data packet reception confirmed.', 'log-ok');
+                DISTRICT.log('PLAYER: Routing Worker queue output to broadcast deck.', 'log-ok');
+
+                document.dispatchEvent(new CustomEvent('district:broadcast', { detail: { connected: true } }));
+                document.dispatchEvent(new CustomEvent('district:queue-sync'));
+            } else {
+                // Disconnect Logic
+                DISTRICT.isConnected = false;
+                button.textContent = 'Connect to Broadcast // Listen';
+                setConnectButtonState(button, 'idle');
+
+                setStatusDisplay('offline', 'OFFLINE');
+                updateNowPlayingDisplay(null);
+
+                DISTRICT.log('NETWORK: Connection terminated. Broadcast paused.', 'log-error');
+                DISTRICT.log('PLAYER: Remote audio muted. Queue polling remains active.', 'log-warn');
+
+                document.dispatchEvent(new CustomEvent('district:broadcast', { detail: { connected: false } }));
+            }
+        }
+
+        // --- Initialization ---
+        window.onload = function() {
+            // Log for debugging
+            console.log('DISTRICT UI Initialized.');
+            initGlitchLoop();
+            initPlayerApp();
+            if (window.location.protocol === 'file:') {
+                DISTRICT.log('PLAYER WARNING: Browsers block YouTube embeds from the file:// scheme. Serve this UI via http://localhost (or set window.DISTRICT_EMBED_ORIGIN) so YouTube can verify the origin.', 'log-warn');
+            }
+
+            // Set up initial state messages
+            setTimeout(() => {
+                DISTRICT.log('NETWORK: Waiting for signal. Press CONNECT to start data flow.', 'log-accent');
+            }, 1000);
+        };
+    </script>
+
+</body>
+</html>
