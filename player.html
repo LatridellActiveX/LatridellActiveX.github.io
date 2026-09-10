@@ -882,6 +882,9 @@
             const finalizeYouTubeEmbedUrl = (inputUrl) => {
                 try {
                     const url = inputUrl instanceof URL ? inputUrl : new URL(inputUrl);
+                    if (!url.searchParams.has('autoplay')) {
+                        url.searchParams.set('autoplay', '1');
+                    }
                     if (!url.searchParams.has('rel')) {
                         url.searchParams.set('rel', '0');
                     }
@@ -963,7 +966,7 @@
                     refs.playerIframe.src = embedUrl;
                     refs.playerIframe.dataset.currentSrc = embedUrl;
                     const descriptor = track.title || 'Remote Track';
-                    pushLog(`PLAYER ARMED: ${descriptor}. Press play inside the iframe to start audio.`, 'log-accent');
+                    pushLog(`PLAYER ARMED: ${descriptor}. Auto-play requested for the embed player.`, 'log-accent');
                 }
             };
 
